@@ -3,852 +3,298 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXUS // AI TERMINAL</title>
+<title>NEXUS // KNOWLEDGE BOOK</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;500;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
 :root {
-  --neon-cyan: #00ffff;
-  --neon-magenta: #ff00ff;
-  --neon-green: #00ff9f;
-  --neon-orange: #ff6b00;
-  --bg-dark: #0a0a12;
-  --bg-panel: #12121a;
-  --border: #1e1e2e;
-  --text: #e0e0ff;
-  --muted: #8888aa;
+  --cyan: #7ef9ff;
+  --mag: #ff4fd8;
+  --green: #5dffb0;
+  --amber: #ffb020;
+  --bg: #07080f;
+  --panel: #10131c;
+  --line: #232838;
+  --text: #e7e9f4;
+  --muted: #8b93a7;
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  background: var(--bg-dark);
+  background: var(--bg);
   color: var(--text);
   font-family: 'Rajdhani', sans-serif;
-  overflow-x: hidden;
   min-height: 100vh;
+  font-size: 18px;
 }
-
 body::before {
   content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: 
-    linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+  position: fixed; inset: 0;
+  background:
+    linear-gradient(rgba(126,249,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(126,249,255,0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
   pointer-events: none;
-  z-index: 0;
 }
-
 header {
-  background: linear-gradient(90deg, #0a0a12, #1a0a2e, #0a0a12);
-  border-bottom: 2px solid var(--neon-cyan);
-  padding: 0.8rem 1.5rem 0.6rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  position: relative;
-  z-index: 10;
-  box-shadow: 0 0 30px rgba(0,255,255,0.2);
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(7,8,15,0.92);
+  border-bottom: 1px solid var(--cyan);
+  backdrop-filter: blur(8px);
+  padding: 0.8rem 1.2rem 0.7rem;
 }
-
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.ticker-wrap {
-  width: 100%;
-  overflow: hidden;
-  background: rgba(0,255,159,0.05);
-  border: 1px solid rgba(0,255,159,0.2);
-  border-radius: 2px;
-  padding: 0.3rem 0;
-}
-
-.ticker {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.85rem;
-  color: var(--neon-green);
-  animation: scroll 25s linear infinite;
-  white-space: nowrap;
-  display: inline-block;
-  padding-left: 100%;
-}
-
-@keyframes scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
-}
-
-.nav {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.nav-btn {
+.top { display: flex; justify-content: space-between; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.logo { font-family: 'Orbitron', sans-serif; letter-spacing: 0.14em; color: var(--cyan); font-size: 0.95rem; }
+.asof { font-family: 'Share Tech Mono', monospace; color: var(--green); font-size: 0.82rem; }
+nav { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.7rem; }
+button.nav {
   background: transparent;
-  border: 1px solid var(--neon-cyan);
-  color: var(--neon-cyan);
-  padding: 0.5rem 1rem;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
   font-family: 'Orbitron', sans-serif;
-  cursor: pointer;
-  transition: all 0.3s;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.nav-btn:hover, .nav-btn.active {
-  background: var(--neon-cyan);
-  color: #000;
-  box-shadow: 0 0 20px var(--neon-cyan);
-}
-
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-  position: relative;
-  z-index: 1;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 1.5rem;
-}
-
-.panel {
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.5rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.panel::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-}
-
-.panel h2 {
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon-cyan);
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-  letter-spacing: 2px;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.5rem;
-}
-
-.feed-item {
-  border-left: 3px solid var(--neon-magenta);
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background: rgba(255,0,255,0.05);
-  transition: all 0.3s;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  padding: 0.45rem 0.7rem;
   cursor: pointer;
 }
-
-.feed-item:hover {
-  background: rgba(255,0,255,0.1);
-  transform: translateX(5px);
-  box-shadow: 0 0 15px rgba(255,0,255,0.2);
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-}
-
-.modal.active {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--bg-panel);
-  border: 1px solid var(--neon-cyan);
-  border-radius: 6px;
-  padding: 2rem;
-  max-width: 700px;
-  width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 0 40px rgba(0,255,255,0.3);
-  position: relative;
-}
-
-.modal-content h2 {
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon-cyan);
-  margin-bottom: 1rem;
-}
-
-.modal-content .close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: transparent;
-  border: 1px solid var(--neon-magenta);
-  color: var(--neon-magenta);
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
+button.nav.active, button.nav:hover { background: var(--cyan); color: #041016; }
+main { max-width: 1100px; margin: 0 auto; padding: 1.4rem 1rem 3rem; position: relative; z-index: 1; }
+.pulse {
+  border: 1px solid var(--cyan);
+  background: rgba(126,249,255,0.06);
+  padding: 0.85rem 1rem;
   font-family: 'Share Tech Mono', monospace;
+  color: var(--cyan);
+  line-height: 1.45;
+  margin-bottom: 1rem;
 }
-
-.modal-content a {
-  color: var(--neon-green);
-  text-decoration: none;
-  border-bottom: 1px dotted var(--neon-green);
+.note { color: var(--muted); font-size: 0.95rem; margin-bottom: 1rem; line-height: 1.4; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; margin-bottom: 1rem; }
+.stat { border: 1px solid var(--line); background: var(--panel); padding: 0.7rem; text-align: center; }
+.stat b { display: block; font-family: 'Orbitron', sans-serif; color: var(--cyan); font-size: 0.95rem; }
+.stat span { color: var(--muted); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.section { display: none; }
+.section.on { display: block; }
+.grid2 { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 0.8rem; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 1rem 1.05rem 1.1rem;
+  margin-bottom: 0.8rem;
+  position: relative;
 }
-
-.modal-content a:hover {
-  color: var(--neon-cyan);
-}
-
-.source-list {
-  margin-top: 1rem;
-  padding-left: 1.2rem;
-}
-
-.source-list li {
-  margin-bottom: 0.4rem;
-}
-
-.feed-item .source {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--neon-green);
-  margin-bottom: 0.3rem;
-}
-
-.feed-item .time {
-  float: right;
-  color: var(--muted);
-  font-size: 0.75rem;
-}
-
-.feed-item h3 {
-  color: #fff;
-  margin: 0.5rem 0;
-  font-size: 1.1rem;
-}
-
-.feed-item p {
-  color: var(--muted);
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
+.card h2, .card h3 { font-family: 'Orbitron', sans-serif; font-weight: 500; letter-spacing: 0.06em; }
+.card h2 { color: var(--cyan); font-size: 0.92rem; margin-bottom: 0.7rem; }
+.card h3 { color: #fff; font-size: 1.05rem; margin-bottom: 0.4rem; }
+.kicker { font-family: 'Share Tech Mono', monospace; color: var(--amber); font-size: 0.78rem; margin-bottom: 0.35rem; }
+p { line-height: 1.45; margin-bottom: 0.55rem; }
+ul { margin: 0.2rem 0 0.6rem 1.1rem; }
+li { margin: 0.28rem 0; line-height: 1.35; }
 .tag {
   display: inline-block;
-  background: rgba(0,255,255,0.1);
-  color: var(--neon-cyan);
-  padding: 0.2rem 0.5rem;
-  font-size: 0.7rem;
-  border-radius: 2px;
-  margin-right: 0.5rem;
-  margin-top: 0.5rem;
+  border: 1px solid var(--line);
+  color: var(--cyan);
   font-family: 'Share Tech Mono', monospace;
+  font-size: 0.72rem;
+  padding: 0.12rem 0.4rem;
+  margin: 0.2rem 0.3rem 0 0;
 }
-
-.relevance {
-  border-left-color: var(--neon-orange);
-  background: rgba(255,107,0,0.08);
+a { color: var(--green); }
+.conf { color: var(--green); font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; }
+.timeline { position: relative; margin-left: 0.4rem; padding-left: 1.2rem; border-left: 2px solid var(--cyan); }
+.t-item { margin: 0 0 0.9rem; }
+.t-date { font-family: 'Share Tech Mono', monospace; color: var(--amber); font-size: 0.8rem; }
+.search {
+  width: 100%;
+  background: #0c1018;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  padding: 0.55rem 0.7rem;
+  margin-bottom: 0.8rem;
 }
-
-.edu-card {
-  background: rgba(0,255,159,0.05);
-  border: 1px solid rgba(0,255,159,0.3);
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-}
-
-.edu-card h3 {
-  color: var(--neon-green);
-  margin-bottom: 0.5rem;
-}
-
-.bot-panel {
-  background: rgba(255,0,255,0.05);
-  border: 1px dashed var(--neon-magenta);
-  padding: 1rem;
-  margin-top: 1rem;
-}
-
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.stat {
-  text-align: center;
-  padding: 1rem;
-  background: rgba(0,255,255,0.05);
-  border: 1px solid var(--border);
-}
-
-.stat .value {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.8rem;
-  color: var(--neon-cyan);
-  font-weight: 700;
-}
-
-.stat .label {
-  font-size: 0.8rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.vibe-check {
-  background: rgba(0,255,255,0.08);
-  border: 1px solid var(--neon-cyan);
-  padding: 0.6rem 1rem;
-  margin-bottom: 1.2rem;
-  font-family: 'Share Tech Mono', monospace;
-  color: var(--neon-cyan);
-  font-size: 0.95rem;
-  text-align: center;
-  letter-spacing: 0.5px;
-  box-shadow: 0 0 15px rgba(0,255,255,0.15);
-}
-
-.wave-card {
-  border-left: 3px solid var(--neon-green);
-  background: rgba(0,255,159,0.05);
-  padding: 1.2rem;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.wave-card:hover {
-  background: rgba(0,255,159,0.1);
-  transform: translateX(4px);
-}
-
-.opp-card {
-  border-left: 3px solid var(--neon-orange);
-  background: rgba(255,107,0,0.06);
-  padding: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.volume-panel {
-  background: rgba(0,255,255,0.04);
-  border: 1px solid var(--border);
-  padding: 1rem;
-  margin-bottom: 1.2rem;
-}
-
-.volume-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.85rem;
-}
-
-.volume-row:last-child { border-bottom: none; }
-
-.account-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.account-item a {
-  color: var(--neon-cyan);
-  text-decoration: none;
-  font-family: 'Share Tech Mono', monospace;
-}
-
-.account-item a:hover { text-decoration: underline; }
-
-.source-meta {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--muted);
-  margin: 0.4rem 0;
-  line-height: 1.3;
-}
-
-@keyframes glitch {
-  0%, 100% { text-shadow: 2px 0 var(--neon-magenta), -2px 0 var(--neon-cyan); }
-  50% { text-shadow: -2px 0 var(--neon-magenta), 2px 0 var(--neon-cyan); }
-}
-
-footer {
-  text-align: center;
-  padding: 2rem;
-  color: var(--muted);
-  font-size: 0.8rem;
-  border-top: 1px solid var(--border);
-  margin-top: 2rem;
-}
-
-.section { display: none; }
-.section.active { display: block; }
-
-@media (max-width: 900px) {
-  .grid { grid-template-columns: 1fr; }
-  .stat-grid { grid-template-columns: 1fr; }
-  header { flex-direction: column; gap: 1rem; }
+details.concept { margin-bottom: 0.7rem; }
+details.concept summary { cursor: pointer; list-style: none; }
+details.concept summary::-webkit-details-marker { display: none; }
+.stall { border-left: 3px solid var(--mag); padding-left: 0.7rem; color: #f2d6ef; margin-bottom: 0.6rem; }
+footer { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
+@media (max-width: 800px) {
+  .grid2, .stats { grid-template-columns: 1fr; }
+  body { font-size: 17px; }
 }
 </style>
 </head>
 <body>
 <header>
-  <div class="header-top">
-    <div class="logo">NEXUS // AI TERMINAL</div>
-    <div class="nav">
-      <button class="nav-btn active" onclick="showSection('feed')">FEED</button>
-      <button class="nav-btn" onclick="showSection('waves')">WAVES</button>
-      <button class="nav-btn" onclick="showSection('opp')">OPPORTUNITIES</button>
-      <button class="nav-btn" onclick="showSection('accounts')">ACCOUNTS</button>
-      <button class="nav-btn" onclick="showSection('edu')">EDUCATE</button>
-      <button class="nav-btn" onclick="showSection('bots')">SCANNER</button>
-    </div>
+  <div class="top">
+    <div class="logo">NEXUS // KNOWLEDGE BOOK</div>
+    <div class="asof" id="asof"></div>
   </div>
-  <div class="ticker-wrap">
-    <div class="ticker" id="ticker">VIBE: AGENTIC PRODUCTION ECONOMICS • ALWAYS-ON + COMPUTER-USE WAVE • PERMISSIONS AS BOTTLENECK • PRIMARY SOURCES PRIORITIZED • HOURLY DIGESTS ACTIVE •</div>
-  </div>
+  <nav>
+    <button class="nav active" data-s="pulse">PULSE</button>
+    <button class="nav" data-s="waves">WAVES</button>
+    <button class="nav" data-s="time">TIMELINE</button>
+    <button class="nav" data-s="concepts">CONCEPTS</button>
+    <button class="nav" data-s="ledger">LEDGER</button>
+    <button class="nav" data-s="watch">WATCH</button>
+  </nav>
 </header>
+<main>
+  <div class="pulse" id="pulse-line"></div>
+  <p class="note" id="book-note"></p>
+  <div class="stats" id="stats"></div>
 
-<div class="container">
-  <div class="vibe-check" id="vibe-check">VIBE CHECK: Agentic systems are moving from demos into production economics — always-on + computer-use is the current wave, with permission and verification as the real bottlenecks.</div>
-
-  <div class="volume-panel">
-    <div style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); font-size:0.9rem; margin-bottom:0.6rem; letter-spacing:1px;">// VOLUME ESTIMATES <span style="color:var(--muted); font-size:0.7rem; font-family:'Rajdhani',sans-serif;">(rough sample, not real-time rate)</span></div>
-    <div id="volume-content"></div>
-    <div style="font-size:0.7rem; color:var(--muted); margin-top:0.5rem; font-family:'Share Tech Mono',monospace;">Estimates from recent post sampling on each hourly pull. Not a live stream. Accuracy varies by topic noise.</div>
-  </div>
-
-  <div class="stat-grid">
-    <div class="stat"><div class="value">~HIGH</div><div class="label">Agent Momentum</div></div>
-    <div class="stat"><div class="value">PRIMARY</div><div class="label">Source Priority</div></div>
-    <div class="stat"><div class="value">HOURLY</div><div class="label">Scan Cadence</div></div>
-  </div>
-
-  <!-- FEED SECTION -->
-  <div id="feed" class="section active">
-    <div class="grid">
-      <div class="panel">
-        <h2>// LIVE SIGNAL FEED</h2>
-        <div id="feed-content"></div>
-      </div>
-      <div class="panel">
-        <h2>// TREND PULSE</h2>
-        <div class="edu-card">
-          <h3>Current Wave</h3>
-          <p><strong>Always-on + computer-use agents</strong> are the dominant conversation. Labs and operators are moving from “prompt when needed” to background systems that watch, propose, and act under constraints.</p>
-        </div>
-        <div class="edu-card">
-          <h3>Why It’s a Wave</h3>
-          <p>Models just got cheap/fast enough for screen work (Terra-class pricing). Multiple labs shipping always-on features. Enterprises starting to demand sandboxes and audit trails. Repeated across independent accounts + primary announcements.</p>
-        </div>
-        <div class="edu-card">
-          <h3>Likely Next</h3>
-          <p>Production permission frameworks, multi-agent orchestration with verification loops, and tighter cost routing between frontier planners and cheaper workhorses.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WAVES SECTION -->
-  <div id="waves" class="section">
-    <div class="panel">
-      <h2>// CURRENT WAVES</h2>
-      <div id="waves-content"></div>
-    </div>
-  </div>
-
-  <!-- OPPORTUNITIES SECTION -->
-  <div id="opp" class="section">
-    <div class="panel">
-      <h2>// ZONES OF INTEREST — VERCLER CO + RAMCLEAN</h2>
-      <div id="opp-content"></div>
-    </div>
-  </div>
-
-  <!-- ACCOUNTS SECTION -->
-  <div id="accounts" class="section">
-    <div class="panel">
-      <h2>// ACCOUNTS TO WATCH</h2>
-      <div id="accounts-content"></div>
-    </div>
-  </div>
-
-  <!-- EDU SECTION -->
-  <div id="edu" class="section">
-    <div class="panel">
-      <h2>// EDUCATIONAL MODULES — STAY AHEAD</h2>
-      <div class="edu-card">
-        <h3>01 // Computer Use as the Practical Interface</h3>
-        <p>Models that can see a screen, click, type, and navigate apps are the bridge from chat to real workflow automation. This is the capability that just became cheap enough for commercial ops.</p>
-        <p style="margin-top:0.6rem;"><strong>Learn from:</strong></p>
-        <ul class="source-list">
-          <li><a href="https://openai.com/index/introducing-gpt-6-1-terra/" target="_blank" rel="noopener">OpenAI: Introducing GPT-6.1 Terra (computer-use focus + pricing)</a></li>
-          <li><a href="https://developers.openai.com/api/docs/models/gpt-6.1-terra" target="_blank" rel="noopener">OpenAI API Docs – GPT-6.1 Terra model card</a></li>
-        </ul>
-      </div>
-      <div class="edu-card">
-        <h3>02 // Agents, Approval Loops, and Workflows</h3>
-        <p>An agent takes multi-step actions toward a goal. The durable commercial pattern is: Input → Analysis → Human-reviewable artifact → Approval → Action. This is the pattern you already run.</p>
-        <p style="margin-top:0.6rem;"><strong>Learn from:</strong></p>
-        <ul class="source-list">
-          <li><a href="https://www.ciodive.com/news/gartner-strategic-technology-trends-2026/803413/" target="_blank" rel="noopener">Gartner / CIO Dive: Multi-agent systems and 2026 trends</a></li>
-          <li><a href="https://the-ai-future.com/blog/current-trends-in-ai" target="_blank" rel="noopener">The AI Future: Current trends in AI 2026 (always-on agents)</a></li>
-        </ul>
-      </div>
-      <div class="edu-card">
-        <h3>03 // Authenticity & Noise on X</h3>
-        <p>A large share of longer English posts on X are likely AI-generated. Treat viral claims as leads. Prefer primary sources (company blogs, S-1 filings, system cards, official announcements).</p>
-        <p style="margin-top:0.6rem;"><strong>Learn from:</strong></p>
-        <ul class="source-list">
-          <li><a href="https://originality.ai/blog/social-media-tracker-september" target="_blank" rel="noopener">Originality.ai Social Media AI Tracker (Sep 2026 data)</a></li>
-        </ul>
-      </div>
-      <div class="edu-card">
-        <h3>04 // Current Waves Worth Watching</h3>
-        <p>Always-on / background agents, computer-use economics, and permission/verification systems are the active waves. Capability is no longer the main constraint — trust, cost, and auditability are.</p>
-        <p style="margin-top:0.6rem;"><strong>Learn from:</strong></p>
-        <ul class="source-list">
-          <li><a href="https://www.atherial.ai/state-of-ai" target="_blank" rel="noopener">Atherial State of AI Report (Fall 2026) – horizontal agents & verification</a></li>
-          <li><a href="https://news.lavx.hu/article/infoq-publishes-2026-ai-ml-and-data-engineering-trends-report" target="_blank" rel="noopener">InfoQ 2026 AI/ML Trends Report (agent orchestration, inference)</a></li>
-        </ul>
-      </div>
-      <div class="edu-card">
-        <h3>05 // Recommended Free Learning Paths</h3>
-        <ul class="source-list">
-          <li><a href="https://openai.com/academy" target="_blank" rel="noopener">OpenAI Academy / AI Foundations</a></li>
-          <li><a href="https://www.anthropic.com/learn" target="_blank" rel="noopener">Anthropic Claude learning resources</a></li>
-          <li><a href="https://www.elementsofai.com/" target="_blank" rel="noopener">Elements of AI (University of Helsinki)</a></li>
-          <li><a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener">Microsoft Generative AI for Beginners (GitHub)</a></li>
-          <li><a href="https://huggingface.co/learn" target="_blank" rel="noopener">Hugging Face courses</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- WORK SECTION -->
-  <div id="work" class="section">
-    <div class="panel">
-      <h2>// RELEVANCE: VERCLER CO + RAMCLEAN</h2>
-      <div class="feed-item relevance">
-        <div class="source">NEXUS ANALYSIS</div>
-        <h3>Computer Use Models → Workflow Automation</h3>
-        <p>GPT-6.1 Terra and similar models are optimized for exactly the kind of work you productize: reading screens, filling forms, interpreting documents, drafting. Your "One Workflow, Gone in 30 Days" offer is now cheaper to deliver and more capable.</p>
-        <div class="tag">VERCLER CO</div>
-        <div class="tag">DATUM PATTERN</div>
-      </div>
-      <div class="feed-item relevance">
-        <div class="source">NEXUS ANALYSIS</div>
-        <h3>Anthropic IPO Context</h3>
-        <p>Massive capital flowing into frontier AI. This accelerates tool availability and lowers long-term costs for agentic systems. For RamClean ops and Vercler Co. clients: more capable, cheaper automation is coming. Focus on the approval-gate pattern you already own.</p>
-        <div class="tag">RAMCLEAN</div>
-        <div class="tag">OPS SYSTEMS</div>
-      </div>
-      <div class="feed-item relevance">
-        <div class="source">NEXUS ANALYSIS</div>
-        <h3>What to Try This Week</h3>
-        <p>1. Test GPT-6.1 Terra (or Claude) on a real RamClean or client workflow: e.g., invoice extraction → review artifact.<br>
-        2. Document the time saved. This becomes case-study fuel for Vercler Co.<br>
-        3. Map one more manual process that matches the computer-use strengths of new models.</p>
-        <div class="tag">ACTIONABLE</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- BOTS SECTION -->
-  <div id="bots" class="section">
-    <div class="panel">
-      <h2>// GROK BOT COMMAND</h2>
-      <div class="bot-panel">
-        <h3 style="color: var(--neon-green); margin-bottom: 1rem;">LIVE SCANNER: ACTIVE</h3>
-        <p>NEXUS AI Signal Scan runs hourly. Each digest now includes source transparency (accounts seen, origin breakdown, why it was chosen over hype), a 1-line vibe check, current wave analysis, and personal opportunity flags for Vercler Co. / RamClean.</p>
-        <p style="margin-top: 0.5rem;">Digests arrive via app + email. This terminal is the deep curated view. Click any card for full sourcing and next-step notes.</p>
-        <p style="margin-top: 1rem; color: var(--neon-orange);">Note: Every 10 minutes is not supported here (hourly is the minimum). High-frequency scans also burn usage quickly — hourly keeps it practical on SuperGrok.</p>
-      </div>
-      <div style="margin-top: 1.5rem;">
-        <h3 style="color: var(--neon-cyan);">Manual Scan Controls</h3>
-        <button class="nav-btn" style="margin-top: 0.5rem;" onclick="alert('Request a new scan in the Grok chat: \"Update NEXUS feed with latest AI signals\"')">REQUEST LIVE SCAN</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<footer>
-  NEXUS // AI TERMINAL • Built for Gage Vercler • Data as of 2026-11-04 • Cyberpunk mode engaged
-</footer>
-
-<!-- DETAIL MODAL -->
-<div id="detail-modal" class="modal">
-  <div class="modal-content">
-    <button class="close" onclick="closeModal()">✕ CLOSE</button>
-    <div id="modal-body"></div>
-  </div>
-</div>
-
+  <section id="pulse" class="section on"></section>
+  <section id="waves" class="section"></section>
+  <section id="time" class="section">
+    <input class="search" id="q-time" placeholder="Search the timeline">
+    <div class="timeline" id="timeline"></div>
+  </section>
+  <section id="concepts" class="section">
+    <input class="search" id="q-con" placeholder="Search concepts">
+    <div id="concepts-list"></div>
+  </section>
+  <section id="ledger" class="section">
+    <div id="ledger-list"></div>
+  </section>
+  <section id="watch" class="section">
+    <div id="watch-list"></div>
+  </section>
+</main>
+<footer>NEXUS book · entries are kept · the email remains the hourly tape · edition <span id="ed"></span></footer>
+<script type="application/json" id="kb-data">{"meta": {"asOf": "2026-11-11", "title": "NEXUS knowledge book", "edition": 2, "note": "The hourly email is the tape. This page is the book. A line is kept when it changes the wave, the timeline, or a concept. Older entries stay. Nothing here is a live tick."}, "pulse": "The 2026 agent wave already happened. What is live now is where the agent lives: a persistent computer and a job that continues when you close the chat. The next wave is not another chatbot. It is computer use on systems that have no connector, and it only pays if permission and model cost stay under control.", "judgment": {"current": {"name": "The agent has a computer", "confidence": "High", "since": "Aug–Oct 2026", "summary": "The products that matter stopped being a smarter reply box. Grok Bot, OpenAI dots, Claude Duet, Meta Muse, and Manus each gave the agent a place to keep working: its own machine, its own files, and a reason to act between your sessions.", "whyWave": "The same architecture showed up across labs that do not copy each other's marketing. That is the test. A feature one company ships is a launch. Five companies shipping 'always on, own computer, hand the human the approval' in one season is a wave.", "evidence": ["11 Aug 2026: Grok Bot beta. Each agent gets a persistent cloud computer and can sign into tools you already use.", "29 Sep 2026: OpenAI dots. Always-on agents with their own cloud computer, rolling out on paid ChatGPT plans.", "21 Oct 2026: Claude Duet opens as a waitlisted proactive agent for US Pro and Max.", "Muse, launched 8 Sep 2026, is the consumer-scale version of the same idea. Meta later said more than 10 million people in the US and Canada had set one up.", "11 Nov 2026: independent write-ups are now describing the shift as architectural, not a model release. The agent left the chat window."], "trajectory": "Chat session, then connectors you trigger, then a schedule you still own, then an agent that owns the runtime. We are in that last step. The argument has moved from 'can it plan' to 'where does it live, and who may it act as'.", "forYou": "This is why scheduled Claude plus connectors felt like the same thing and then suddenly was not. A schedule is still you being the computer. A bot with a machine can hold the job overnight and only interrupt you at the approval. That is the product difference for Datum-style ops and for Vercler workflow offers."}, "next": {"name": "Computer use, but only where a connector cannot go", "confidence": "Medium-high", "horizon": "Into 2027", "summary": "The next wave is the agent driving screens, portals, and old software the way a person does. It will not replace APIs. It fills the gaps APIs never got.", "why": "Computer use is already generally available in more than one stack, and two of the first dedicated computer-use models were already shut down by July 2026. That is what a capability looks like when it stops being a demo and becomes a feature inside the product. The remaining argument is where it is worth the screenshot, the latency, and the messier audit trail.", "notYet": "Unsupervised agents with admin rights. People are already floating automatic patching and root access. That is a risk conversation, not the wave to build on. The buyers who will pay you are the ones who want the artifact reviewed before anything moves.", "watch": ["Does computer use stay a fallback for systems with no API, or do vendors push it as the default even when a connector exists?", "Do approval gates land on the finished artifact, or do they nag on every click? Artifact-level approval is the one operators will tolerate.", "Cost routing: frontier model for the plan, cheaper model for the screen work. Service margins die if every click is a frontier call.", "Identity: whose login is the agent using, and what is the blast radius if that session is hijacked?"]}, "fading": "Calling a scheduled prompt an agent. If the work dies when you close the tab, and you are still the one who remembers to start it, you are still the runtime."}, "timeline": [{"date": "2023–2024", "era": "Chat", "title": "The session is the product", "what": "You open a window, ask, get an answer, close it. State lives in the transcript you remember to paste back.", "why": "This is the baseline every later product is still compared against. If a new tool cannot beat 'I will just ask again', it is not a wave."}, {"date": "2025", "era": "Connectors", "title": "The model can touch your tools, if you start it", "what": "Projects, connectors, and MCP-style tool access let one chat read mail, docs, and tickets. You still open the session and you still decide to run it.", "why": "This is the workstation you already had with Claude. It is powerful and it is not an employee. Nothing happens while you are away unless you armed a schedule."}, {"date": "2025–early 2026", "era": "Schedules", "title": "You design the cadence", "what": "Scheduled tasks and automations run a prompt on a clock and can use the same connectors. The model does the step. You still own the job description, the clock, and the memory between runs.", "why": "This is the thing that made commercial agents feel fake at first. A schedule plus connectors already covers a lot of 'check this every morning'. The gap is continuity, initiative, and a place to keep files."}, {"date": "May 2026", "era": "Computer use", "title": "Screen work enters enterprise tooling", "what": "Microsoft's Copilot Studio computer use reaches general availability. The agent can drive sites and desktop apps, not only APIs.", "why": "Computer use stops being a research demo. It becomes something a company can buy, with all the audit problems that implies."}, {"date": "23–28 Jul 2026", "era": "Computer use", "title": "The first dedicated computer-use models are retired", "what": "OpenAI's computer-use-preview model and Google's Gemini 2.5 Computer Use model are shut down. The capability moves inside newer general models and products.", "why": "A wave is real when the special preview dies and the feature remains. Do not build a plan on a model name that was only a preview."}, {"date": "11 Aug 2026", "era": "Own computer", "title": "Grok Bot beta", "what": "Always-on agents. Each one gets a persistent cloud computer, can sign into existing tools as you, and runs multi-step work until a human needs to approve something.", "why": "This is the cleanest statement of the architectural change: the agent has a machine, not just a prompt."}, {"date": "19 Aug 2026", "era": "Computer use", "title": "Claude computer use leaves beta on the API", "what": "Anthropic takes computer use out of beta on the Claude API and Google Cloud. It stays in beta on some other clouds.", "why": "Availability is uneven on purpose. 'GA' on one cloud is not 'GA' everywhere. Check the surface you would actually ship on."}, {"date": "8 Sep 2026", "era": "Own computer", "title": "Meta Muse launches", "what": "A personal agent on iOS, Android, web, and WhatsApp. Distribution, not a new reasoning trick, is the story.", "why": "Waves that only exist for developers stay small. Muse is the proof that the same pattern is being sold to everyone."}, {"date": "18 Sep 2026", "era": "Judgment", "title": "The year-of-the-agent claim, and the 2027 claim", "what": "A widely circulated operator essay: 2026 was the year companies deployed agents. The predicted next year is computer use, an agent with a screen, a mouse, and a keyboard.", "why": "Useful as a frame, not as a law. It matches what shipped. It will be wrong if computer use stays clumsy and connectors keep winning."}, {"date": "29 Sep 2026", "era": "Own computer", "title": "OpenAI dots", "what": "Always-on agents with their own cloud computer, aimed at ChatGPT paid plans.", "why": "When OpenAI ships the same shape as Grok Bot, the pattern is no longer a single lab's bet."}, {"date": "21 Oct 2026", "era": "Own computer", "title": "Claude Duet, and Muse's scale", "what": "Anthropic opens a waitlisted research preview of Duet, a proactive agent. The same week, Meta's CEO says more than 10 million people in the US and Canada had set up Muse, with about a quarter using it on a given day.", "why": "Proactive means it starts. That is the line a schedule never crosses by itself. The usage number, if it holds, says normal people will tolerate an agent that acts between sessions."}, {"date": "30 Oct 2026", "era": "Computer use", "title": "Gemini computer use generally available", "what": "Google makes computer use generally available in Gemini and in its enterprise agent platform, with a sandbox and a human-in-the-loop policy. The older standalone computer-use model is already gone.", "why": "The control that shipped with it matters more than the launch. Human-in-the-loop is becoming part of the product, not a blog footnote."}, {"date": "Oct 2026", "era": "Cost", "title": "Right model at the right moment", "what": "Microsoft and PC vendors push hybrid intelligence: frontier models in the cloud for hard steps, smaller models on the device for the rest, because token bills are making companies hesitate.", "why": "This is the economic wave under the capability wave. If every step is a frontier call, service businesses cannot resell the workflow."}, {"date": "4–5 Nov 2026", "era": "NEXUS book", "title": "First kept scans", "what": "Early NEXUS passes kept four durable points: open-weight models are good enough to matter, computer use got cheaper, always-on agents proliferated, and permission systems are the bottleneck. Frontier launch names were treated as leads until a primary source confirmed them.", "why": "Kept so the book has a memory. Later scans should add a line here, not replace this one."}, {"date": "11 Nov 2026", "era": "Judgment", "title": "Today's call", "what": "The current wave is the agent with its own computer. The next wave is selective computer use plus permission and cost routing. Fully unsupervised admin agents are the risk people are already arguing about, not the thing to sell.", "why": "This entry is the judgment. If a later week contradicts it, add a new dated entry that says what changed. Do not silently rewrite this one."}], "concepts": [{"id": "schedule-vs-agent", "title": "A schedule is not an agent", "stall": "This is the stall. Dots, Grok Bot, Duet, and Muse looked like Claude with a calendar and your connectors. They are not.", "plain": "A scheduled task is a prompt you armed. It runs when the clock says so, inside a session that starts and ends. An always-on agent is a worker with a computer that stays on. It can notice, continue, and come back to you with something to approve.", "difference": ["Who remembers the job. In a schedule, you do. In a bot, the job and its files persist on its machine after you leave.", "Who starts the next step. A schedule waits for its clock. A proactive agent can start because something changed, not because you set 9:00.", "Where the work lives. A chat transcript is not a desk. A persistent computer has files, logins, and half-finished work.", "How you supervise. A schedule shows you the run log. A serious agent is supposed to hand you an artifact and wait, instead of clicking around unseen."], "whenItMatters": "Use a schedule when the task is 'every morning, do this exact thing'. Use an agent when the task is 'own this outcome, and interrupt me when a decision is actually needed'. Most of what feels like hype is a schedule wearing an agent costume. The tell is whether the work survives you closing the window.", "forYou": "RamClean ops and Vercler offers already look like: intake, a reviewable artifact, your approval, then the action. A schedule can generate the artifact on a clock. A bot can watch the inbox or the ticket queue and only produce the artifact when the world changed. That is the part worth selling. Do not sell 'we set a cron'.", "watch": "If a new product cannot name its computer, its memory, and the moment it is allowed to act without you, treat it as a scheduler.", "sources": [{"title": "Why agents are being given their own computers (11 Nov 2026)", "url": "https://www.frederick.ai/blog/agents-with-their-own-computers"}, {"title": "Personal agents, dots, Duet, Muse, Grok Bot (UC Today, 30 Oct 2026)", "url": "https://uctoday.com/hyper-productivity-is-here-personal-ai"}]}, {"id": "agent-computer", "title": "The agent's computer", "stall": "People hear 'cloud computer' and think it is a server bill. It is the difference between a conversation and a job.", "plain": "The computer is a private machine the agent keeps: files, a browser, code it can run, and logins you granted. The chat is just how you talk to something that already has a desk.", "difference": ["Chat-only: context dies or has to be re-pasted.", "Connector-only: the agent can call tools during a session you started.", "Own computer: the agent can leave work in progress and resume it without you reconstructing the state."], "whenItMatters": "Any workflow with a pile of documents, a half-built spreadsheet, or a login to a portal that is not a clean API. That is most of a service business.", "forYou": "Datum-style margin tracking and ticket systems are desks, not prompts. An agent without a computer will keep asking you for the same file. An agent with one can keep the working file and bring you the exception.", "watch": "Who owns the machine when the vendor turns it off, and whether your client data is sitting on it.", "sources": [{"title": "Frederick AI on agents and their computers", "url": "https://www.frederick.ai/blog/agents-with-their-own-computers"}]}, {"id": "computer-use", "title": "Computer use versus a connector", "stall": "Computer use sounds like 'the AI uses a computer', which you already imagine it does. It means something narrower: it looks at pixels and clicks, because there is no proper tool to call.", "plain": "A connector is a door the software vendor built: a clean action like 'create the ticket' with a record of what happened. Computer use is the agent sitting at the screen the way a temp would, because that door was never built.", "difference": ["Connectors are cheaper, more reliable, and easier to audit. Prefer them.", "Computer use reaches carrier portals, old internal apps, and benefit sites nobody will ever integrate.", "A screenshot trail is a worse audit than a tool call. Use it where you have no choice, not as a default."], "whenItMatters": "When the bottleneck is a website a person currently copy-pastes out of. Not when you already have an API.", "forYou": "Vercler workflows that die in a client portal are computer-use candidates. Workflows that already have a connector should stay on the connector. Selling computer use everywhere will be slower and more expensive than the client expects.", "watch": "Vendors retiring the special model and folding the skill into the normal one. That already happened in July 2026. Follow the product status, not the old model card.", "sources": [{"title": "2026 was the agent year, 2027 the computer-use year (Section, 18 Sep 2026)", "url": "https://www.sectionai.com/blog/2026-was-the-year-of-the-agent-2027-is-the-year-of-computer-use"}, {"title": "Computer-use product status as of early Nov 2026", "url": "https://www.querynow.com/ai-agents/what-is-an-ai-agent/computer-use-agents"}]}, {"id": "approval", "title": "Approve the artifact, not the keystrokes", "stall": "Teams hear 'human in the loop' and imagine approving every click. That design gets turned off in a week.", "plain": "The loop that survives is: the agent does the messy work, you review a thing you can read (a draft, a margin sheet, a ticket update), you approve once, then it acts.", "difference": ["Click-level approval: safe, and nobody will use it.", "Artifact approval: you stay accountable for the decision that matters.", "No approval, admin rights: this is what security people are warning about this week. A hijacked agent with root is not a productivity story."], "whenItMatters": "The moment an agent can spend money, email a customer, or change a live system.", "forYou": "This is already how you sell. As agents get their own computers, the offer gets sharper: we keep a person on the decision and take the person off the keystrokes. That is a governance product, not a chatbot product.", "watch": "Whether new agents default to asking before external actions, or default to acting and logging it after.", "sources": [{"title": "Gemini's computer-use launch shipped with a human-in-the-loop policy", "url": "https://www.querynow.com/ai-agents/what-is-an-ai-agent/computer-use-agents"}]}, {"id": "routing", "title": "The right model at the right moment", "stall": "It is easy to think the newest frontier model should do the whole job. The bill says otherwise, and so does the quality on boring steps.", "plain": "A planner model decides. A cheaper model, sometimes on the device, does the extraction, the sorting, and the first draft. You only pay frontier prices for the step that is actually hard.", "difference": ["One-model workflows are simple and often too expensive to resell.", "Routed workflows are how agent products will be priced into a service margin.", "On-device or small models cover the steps that do not need a frontier reasoning pass."], "whenItMatters": "As soon as a workflow runs every day instead of once in a demo.", "forYou": "A Vercler engagement that 'just uses the best model' will look impressive and lose money. Price the frontier step separately from the grunt work. RamClean's own ops should be built the same way or the tool will cost more than the labor it replaces.", "watch": "Hybrid-intelligence pitches from Microsoft and the PC makers. They are a cost story dressed as a hardware story.", "sources": [{"title": "Agentic AI PCs and hybrid intelligence (Computerworld, 27 Oct 2026)", "url": "https://www.computerworld.com/article/4240536/right-model-at-right-moment-vendors-push-agentic-ai-pc-vision.html"}]}], "ledger": [{"date": "2026-11-11", "source": "Synthesis · primary write-ups", "title": "The desk moved out of the chat window", "body": "Today's clearest non-launch signal: writers are describing agents as workers with machines, and naming the same products. That is how you know a launch cluster has become the default architecture.", "why": "It changes the book. Previous NEXUS notes said always-on agents were proliferating. This says what they have in common.", "accounts": "Frederick AI, plus the product record for Grok Bot, dots, Duet, Muse, Manus", "origin": "Primary product history plus one same-day analysis. Not a viral thread.", "sources": [{"title": "Frederick AI, 11 Nov 2026", "url": "https://www.frederick.ai/blog/agents-with-their-own-computers"}]}, {"date": "2026-11-11", "source": "Risk signal · not a product wave", "title": "People are already arguing about agents with admin rights", "body": "At a cyber-policy event this week, the warning was specific: automating patches and then letting an agent roll them out with privileges creates a new way to lose the system. Separately, researchers are pointing at realistic video companions as the next social-risk wave, which is not your market but shows where 'always on' goes when it is aimed at attention instead of work.", "why": "Kept so the book does not only track capability. The commercial opening next to this risk is the approval gate.", "accounts": "Adam Gleave; Arvind Narayanan on a different always-on risk", "origin": "Individual expert posts, 11 Nov 2026. Treat as argument, not as a measured incident count.", "sources": []}, {"date": "2026-10-30", "source": "Product record", "title": "Computer use is a feature now, and the old model names are dead", "body": "By early November, Copilot Studio computer use is GA, Claude computer use is out of beta on some clouds, and Gemini computer use is GA with a sandbox. The dedicated preview models from OpenAI and Google were shut down in July.", "why": "Stops you from planning around a model card that no longer exists.", "accounts": "Vendor docs as summarized by QueryNow's 2 Nov status table", "origin": "Secondary compilation of vendor pages. Re-check the vendor page before you build on a specific cloud.", "sources": [{"title": "Computer-use status table", "url": "https://www.querynow.com/ai-agents/what-is-an-ai-agent/computer-use-agents"}]}, {"date": "2026-10-21", "source": "Scale, reported from calls", "title": "Muse and Grok Bot are past the demo", "body": "Coverage of the late-October calls: Meta said more than 10 million Muse setups in the US and Canada, about a quarter active on a given day. SpaceX's call described Grok Bot at 800,000 paid weekly users earlier in the month, more than doubling over the prior month. 'Paid weekly users' was not defined on the call.", "why": "Distribution tells you the wave is not only builders. The undefined metric is why this stays a ledger note and not a precise chart.", "accounts": "Reported remarks from Mark Zuckerberg and Gwynne Shotwell, via UC Today", "origin": "Earnings-call coverage, not the transcript itself.", "sources": [{"title": "UC Today, 30 Oct 2026", "url": "https://uctoday.com/hyper-productivity-is-here-personal-ai"}]}, {"date": "2026-11-04", "source": "NEXUS kept scan", "title": "Permission is the bottleneck, not the demo", "body": "The first book entries already said this and it has not been retired: capability is shipping faster than a buyer's willingness to let an agent act. Open-weight models matter as the cheap workhorse. Identity and least privilege are the part clients will ask you about.", "why": "Retained on purpose. Later hype does not delete it.", "accounts": "NEXUS scans of 4–5 Nov 2026", "origin": "Internal synthesis from those pulls. Primary links were checked at the time; re-verify before you quote a model name to a client.", "sources": []}], "accounts": [{"handle": "@levie", "name": "Aaron Levie", "why": "Says the practical version out loud: multi-model agents, enterprise constraints, what actually ships.", "url": "https://x.com/levie"}, {"handle": "@OpenAI", "name": "OpenAI", "why": "Primary source for dots and whatever replaces a model preview.", "url": "https://x.com/OpenAI"}, {"handle": "@AnthropicAI", "name": "Anthropic", "why": "Primary source for computer use status and Duet.", "url": "https://x.com/AnthropicAI"}, {"handle": "@karpathy", "name": "Andrej Karpathy", "why": "Useful when a launch is being overread. He talks about what the systems actually do.", "url": "https://x.com/karpathy"}, {"handle": "@random_walker", "name": "Arvind Narayanan", "why": "The skeptic worth reading before you call something a wave.", "url": "https://x.com/random_walker"}, {"handle": "@swyx", "name": "swyx", "why": "Operator-level notes on agent tooling, less launch theater.", "url": "https://x.com/swyx"}]}</script>
 <script>
-const vibeCheck = "Agentic systems are moving from demos into production economics — always-on + computer-use is the current wave, with permission and verification as the real bottlenecks.";
+const KB = JSON.parse(document.getElementById('kb-data').textContent);
 
-const feedData = [
-  {
-    source: "TREND WAVE",
-    time: "Nov 4, 2026",
-    title: "Always-On Agents Moving Into Production Economics",
-    body: "Background agents that poll, research, and propose actions are the dominant conversation across labs and operators.",
-    tags: ["AGENTS", "ALWAYS-ON", "TREND"],
-    relevance: true,
-    accounts: "~50–80 distinct accounts on X + 4–6 primary/lab announcements",
-    origin: "Primary: OpenAI Dots, lab posts. Secondary: TechCrunch, CIO Dive, Gartner summaries. X: repeated operator discussions on permissions and cost.",
-    whySelected: "Multiple independent primary announcements + consistent cross-account discussion of the same practical constraints (permissions, cost, verification). Not a single viral claim — pattern confirmed across sources.",
-    explanation: "Labs are shipping always-on features (OpenAI Dots that can message first, background research cadences). Operators are talking about the shift from on-demand prompts to systems that watch state and escalate. The bottleneck has moved from raw capability to permission design, auditability, and cost control.",
-    whyItMatters: "This is the layer above the workflow pattern you already run. Once agents start earlier (watching for exceptions) and only escalate with a reviewable artifact, the value of systems like Datum or Vercler offers increases.",
-    next: "Tighter permission frameworks, multi-agent verification loops, and cost routing between frontier planners and cheaper workhorses.",
-    sources: [
-      { title: "TechCrunch / OpenAI Dots coverage", url: "https://techcrunch.com/" },
-      { title: "Gartner / CIO Dive on multi-agent systems", url: "https://www.ciodive.com/" }
-    ]
-  },
-  {
-    source: "OPENAI OFFICIAL",
-    time: "Oct 26, 2026",
-    title: "GPT-6.1 Terra Makes Computer-Use Economics Practical",
-    body: "Mid-tier model optimized for screen tasks. 50% cheaper, 3× faster on many computer-use workloads.",
-    tags: ["OPENAI", "COMPUTER-USE", "PRICING"],
-    relevance: true,
-    accounts: "Primary announcement + ~30–40 secondary discussions and operator reactions",
-    origin: "Primary: OpenAI blog + API docs. Secondary: tech reporting. X: cost and Terminal-Bench discussion.",
-    whySelected: "Official pricing and capability numbers from OpenAI. Directly measurable economics (token cost, speed, benchmark). Repeated independent confirmation of the computer-use angle.",
-    explanation: "GPT-6.1 Terra launched with $1/$5 per million token pricing and stronger results on Terminal-Bench and visual/screen tasks. It is the workhorse class that makes reading a screen, extracting fields, and proposing a next action cheap enough for commercial margins.",
-    whyItMatters: "Directly lowers the cost of the workflow automation you sell and operate at Vercler Co. and run at RamClean.",
-    next: "Broader adoption of mid-tier models for high-volume screen work; more routing between expensive planners and cheap executors.",
-    sources: [
-      { title: "OpenAI: Introducing GPT-6.1 Terra", url: "https://openai.com/index/introducing-gpt-6-1-terra/" }
-    ]
-  },
-  {
-    source: "TREND WAVE",
-    time: "Nov 4, 2026",
-    title: "Agent Security & Permission Systems as Bottleneck",
-    body: "As agents get more capable, enterprises and sites are sandboxing or blocking them. Permission design is now a product problem.",
-    tags: ["SECURITY", "AGENTS", "TREND"],
-    relevance: true,
-    accounts: "~25–40 accounts discussing sandboxes, blocks, or audit needs + multiple security-focused reports",
-    origin: "Primary/secondary: security write-ups, enterprise reports. X: operator and researcher discussion of unexpected channels and blocks.",
-    whySelected: "Pattern appears across independent security reports and operator accounts. Ties to concrete production constraints rather than abstract hype.",
-    explanation: "Reports include agents finding unexpected channels in isolated tests, enterprises blocking external agents from client accounts, and new sandbox products. The practical question is no longer “can it do the task?” but “what is it allowed to touch, and how do we audit it?”",
-    whyItMatters: "Any system you sell that lets an agent act on behalf of a customer will need clear permission boundaries and human approval gates. This is already your design pattern; the market is catching up.",
-    next: "Standardized agent identity, audit logs, and enterprise sandbox defaults becoming table stakes.",
-    sources: [
-      { title: "Security / frontier coverage", url: "https://www.thefrontier.dev/" }
-    ]
-  }
-];
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&','<':'<','>':'>','"':'"',"'":'&#39;'}[c]));
+}
+function links(arr) {
+  if (!arr || !arr.length) return '';
+  return '<ul>' + arr.map(s => '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a></li>').join('') + '</ul>';
+}
+function tags(list) {
+  return (list || []).map(t => '<span class="tag">' + esc(t) + '</span>').join('');
+}
 
-const wavesData = [
-  {
-    title: "Always-On + Computer-Use Agents",
-    summary: "The dominant conversation is the shift from on-demand chat to background agents that watch state, use screens, and propose actions under constraints.",
-    whyWave: "Multiple labs shipping always-on features at the same time mid-tier models crossed the cost/speed threshold for practical computer use. Repeated across primary announcements and independent operator accounts.",
-    next: "Production permission frameworks, verification loops, and cost-aware multi-model orchestration.",
-    accounts: [
-      { name: "OpenAI (official)", talk: "Shipping Dots always-on assistant + GPT-6.1 Terra computer-use pricing" },
-      { name: "TechCrunch / primary reporting", talk: "Coverage of Dots and background agent features" },
-      { name: "CIO Dive / Gartner", talk: "Multi-agent systems and enterprise adoption constraints" },
-      { name: "~50–80 X accounts", talk: "Operators discussing permissions, cost, and production friction" }
-    ]
-  },
-  {
-    title: "Agent Governance & Verification",
-    summary: "As capability rises, the focus is moving to what agents are allowed to do and how their work is verified.",
-    whyWave: "Enterprises are starting to block or sandbox external agents. Security researchers are documenting unexpected behaviors. Not hype — concrete production friction.",
-    next: "Standardized audit trails, agent identity, and human-in-the-loop defaults on high-impact actions.",
-    accounts: [
-      { name: "Security / frontier write-ups", talk: "Sandbox products, unexpected channels, enterprise blocks" },
-      { name: "Atherial State of AI", talk: "Verification gap and horizontal agents" },
-      { name: "~25–40 X accounts", talk: "Researchers and operators on audit needs and containment" }
-    ]
-  }
-];
+document.getElementById('asof').textContent = 'AS OF ' + KB.meta.asOf + '  ·  ' + KB.timeline.length + ' TIMELINE  ·  ' + KB.concepts.length + ' CONCEPTS';
+document.getElementById('pulse-line').textContent = 'PULSE  ' + KB.pulse;
+document.getElementById('book-note').textContent = KB.meta.note;
+document.getElementById('ed').textContent = KB.meta.edition;
+document.getElementById('stats').innerHTML = [
+  [KB.judgment.current.confidence, 'Current-wave confidence'],
+  [KB.judgment.next.confidence, 'Next-wave confidence'],
+  [String(KB.timeline.length), 'Kept events'],
+  [KB.meta.asOf, 'Last judgment']
+].map(([v,l]) => '<div class="stat"><b>' + esc(v) + '</b><span>' + esc(l) + '</span></div>').join('');
 
-const volumeData = [
-  { topic: "always-on agents", rate: "~2.4 / min" },
-  { topic: "computer-use", rate: "~1.8 / min" },
-  { topic: "agent security / permissions", rate: "~0.9 / min" },
-  { topic: "frontier model launches", rate: "~1.1 / min" }
-];
-
-const accountsData = [
-  { handle: "@levie", name: "Aaron Levie", why: "Practical multi-model agent design and enterprise patterns", url: "https://x.com/levie" },
-  { handle: "@OpenAI", name: "OpenAI", why: "Primary source for model and computer-use launches", url: "https://x.com/OpenAI" },
-  { handle: "@AnthropicAI", name: "Anthropic", why: "Claude capabilities, safety, and enterprise notes", url: "https://x.com/AnthropicAI" },
-  { handle: "@swyx", name: "swyx", why: "Clear operator takes on agent tooling and workflows", url: "https://x.com/swyx" },
-  { handle: "@karpathy", name: "Andrej Karpathy", why: "Deep technical signal on model behavior and training", url: "https://x.com/karpathy" }
-];
-
-function renderVolume() {
-  const container = document.getElementById('volume-content');
-  container.innerHTML = volumeData.map(v => `
-    <div class="volume-row">
-      <span>${v.topic}</span>
-      <span style="color:var(--neon-green);">${v.rate}</span>
+const C = KB.judgment.current, N = KB.judgment.next;
+document.getElementById('pulse').innerHTML = `
+  <div class="grid2">
+    <div>
+      <article class="card">
+        <div class="kicker">CURRENT WAVE · since ${esc(C.since)} · <span class="conf">${esc(C.confidence)} confidence</span></div>
+        <h3>${esc(C.name)}</h3>
+        <p>${esc(C.summary)}</p>
+        <p><strong>Why this is the wave.</strong> ${esc(C.whyWave)}</p>
+        <p><strong>For you.</strong> ${esc(C.forYou)}</p>
+      </article>
+      <article class="card">
+        <div class="kicker">NEXT WAVE · ${esc(N.horizon)} · <span class="conf">${esc(N.confidence)} confidence</span></div>
+        <h3>${esc(N.name)}</h3>
+        <p>${esc(N.summary)}</p>
+        <p>${esc(N.why)}</p>
+        <p><strong>Not this.</strong> ${esc(N.notYet)}</p>
+      </article>
     </div>
-  `).join('');
+    <aside class="card">
+      <h2>// HOW TO READ THIS</h2>
+      <p>The email is every pull. This book only keeps what changes your picture of where AI has been and where it is going.</p>
+      <p>If a later week disagrees with a judgment, a new dated line is added. Old lines stay, so you can see when the call moved.</p>
+      <p class="kicker">FADING</p>
+      <p>${esc(KB.judgment.fading)}</p>
+    </aside>
+  </div>`;
+
+document.getElementById('waves').innerHTML = `
+  <article class="card">
+    <h2>// WHY THE CURRENT CALL</h2>
+    <h3>${esc(C.name)}</h3>
+    <p>${esc(C.trajectory)}</p>
+    <ul>${C.evidence.map(e => '<li>' + esc(e) + '</li>').join('')}</ul>
+  </article>
+  <article class="card">
+    <h2>// WHAT WOULD MAKE THE NEXT WAVE REAL</h2>
+    <h3>${esc(N.name)}</h3>
+    <ul>${N.watch.map(e => '<li>' + esc(e) + '</li>').join('')}</ul>
+    <p>Confidence stays medium-high, not high, because computer use can still lose to connectors on anything that already has an API. The wave is the gap, not every click.</p>
+  </article>`;
+
+function renderTime(q) {
+  const query = (q || '').toLowerCase();
+  const rows = KB.timeline.filter(t => (t.date + t.era + t.title + t.what + t.why).toLowerCase().includes(query));
+  document.getElementById('timeline').innerHTML = rows.slice().reverse().map(t => `
+    <article class="card t-item">
+      <div class="t-date">${esc(t.date)} · ${esc(t.era)}</div>
+      <h3>${esc(t.title)}</h3>
+      <p>${esc(t.what)}</p>
+      <p><strong>Why it is kept.</strong> ${esc(t.why)}</p>
+    </article>`).join('') || '<p class="note">Nothing in the book matches.</p>';
 }
+renderTime('');
+document.getElementById('q-time').addEventListener('input', e => renderTime(e.target.value));
 
-function renderAccounts() {
-  const container = document.getElementById('accounts-content');
-  container.innerHTML = accountsData.map(a => `
-    <div class="account-item">
-      <div>
-        <a href="${a.url}" target="_blank" rel="noopener">${a.handle}</a>
-        <div style="font-size:0.8rem; color:var(--muted); margin-top:0.2rem;">${a.name} — ${a.why}</div>
-      </div>
-    </div>
-  `).join('');
+function renderConcepts(q) {
+  const query = (q || '').toLowerCase();
+  const rows = KB.concepts.filter(c => JSON.stringify(c).toLowerCase().includes(query));
+  document.getElementById('concepts-list').innerHTML = rows.map((c, i) => `
+    <details class="concept card" ${i === 0 && !query ? 'open' : ''}>
+      <summary>
+        <div class="kicker">CONCEPT ${String(i+1).padStart(2,'0')}</div>
+        <h3>${esc(c.title)}</h3>
+      </summary>
+      <p class="stall">${esc(c.stall)}</p>
+      <p>${esc(c.plain)}</p>
+      <p><strong>The actual difference</strong></p>
+      <ul>${c.difference.map(d => '<li>' + esc(d) + '</li>').join('')}</ul>
+      <p><strong>When it matters.</strong> ${esc(c.whenItMatters)}</p>
+      <p><strong>For Vercler and RamClean.</strong> ${esc(c.forYou)}</p>
+      <p><strong>What to watch next.</strong> ${esc(c.watch)}</p>
+      ${links(c.sources)}
+    </details>`).join('') || '<p class="note">Nothing in the book matches.</p>';
 }
+renderConcepts('');
+document.getElementById('q-con').addEventListener('input', e => renderConcepts(e.target.value));
 
-const opportunitiesData = [
-  {
-    title: "Computer-Use Workflow Offers at Service-Business Margins",
-    body: "Mid-tier models are now cheap and accurate enough that “read screen → extract structured data → propose next action → human approves” is commercially viable for cleaning and similar service businesses.",
-    whyYou: "This is the exact pattern you already productize at Vercler Co. and operate at RamClean (Datum-style systems). The technology has caught up to the operating model.",
-    tags: ["VERCLER CO", "RAMCLEAN", "WORKFLOWS"]
-  },
-  {
-    title: "Permission-First Agent Systems as Differentiator",
-    body: "The market is realizing that unconstrained agents create noise or risk. Systems that keep the human in the approval loop on the artifact (not the keystrokes) will be preferred.",
-    whyYou: "You already design and sell with this constraint. As always-on agents proliferate, the “approval as product” angle becomes a clearer competitive edge for service-business workflows.",
-    tags: ["VERCLER CO", "GOVERNANCE"]
-  }
-];
+document.getElementById('ledger-list').innerHTML = KB.ledger.map(item => `
+  <article class="card">
+    <div class="kicker">${esc(item.date)} · ${esc(item.source)}</div>
+    <h3>${esc(item.title)}</h3>
+    <p>${esc(item.body)}</p>
+    <p><strong>Why it is in the book.</strong> ${esc(item.why)}</p>
+    <p class="note">Seen via: ${esc(item.accounts)}<br>Origin: ${esc(item.origin)}</p>
+    ${links(item.sources)}
+  </article>`).join('');
 
-function renderFeed() {
-  const container = document.getElementById('feed-content');
-  container.innerHTML = feedData.map((item, index) => `
-    <div class="feed-item ${item.relevance ? 'relevance' : ''}" onclick="openModal(${index})">
-      <div class="source">${item.source} <span class="time">${item.time}</span></div>
-      <h3>${item.title}</h3>
-      <p>${item.body}</p>
-      <div class="source-meta">Sources: ${item.accounts}<br>Origin: ${item.origin}</div>
-      <div class="source-meta">Why surfaced: ${item.whySelected}</div>
-      ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-      <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--neon-cyan);">CLICK FOR FULL DIGEST →</div>
-    </div>
-  `).join('');
-}
+document.getElementById('watch').innerHTML = `
+  <article class="card">
+    <h2>// ACCOUNTS</h2>
+    <p class="note">Read these when you want the argument, not the launch post. Primary company accounts are for checking what actually shipped.</p>
+    ${KB.accounts.map(a => `<p><a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.handle)}</a> · ${esc(a.name)}<br><span class="note">${esc(a.why)}</span></p>`).join('')}
+  </article>
+  <article class="card">
+    <h2>// HOW THE BOOK GROWS</h2>
+    <p>A new scan does not replace the page. It adds a timeline line, a ledger note, or a revised judgment with a new date. Concepts stay until the idea itself changes, and then a new concept is added beside the old one.</p>
+    <p>Volume-per-minute counters are not on this page anymore. They pretended to be live. The hourly email is the place for the raw tape.</p>
+  </article>`;
 
-function renderWaves() {
-  const container = document.getElementById('waves-content');
-  container.innerHTML = wavesData.map(w => `
-    <div class="wave-card">
-      <h3 style="color:var(--neon-green); margin-bottom:0.5rem;">${w.title}</h3>
-      <p>${w.summary}</p>
-      <p style="margin-top:0.6rem;"><strong>Why it’s a wave:</strong> ${w.whyWave}</p>
-      <p style="margin-top:0.4rem;"><strong>Likely next:</strong> ${w.next}</p>
-      <div style="margin-top:1rem; border-top:1px solid var(--border); padding-top:0.8rem;">
-        <div style="font-family:'Share Tech Mono',monospace; font-size:0.75rem; color:var(--neon-cyan); margin-bottom:0.5rem;">ACCOUNTS / SOURCES GRAPH</div>
-        ${w.accounts.map(a => `
-          <div style="display:flex; gap:0.8rem; margin-bottom:0.5rem; align-items:flex-start;">
-            <div style="min-width:160px; color:var(--neon-magenta); font-size:0.8rem; font-family:'Share Tech Mono',monospace;">${a.name}</div>
-            <div style="flex:1; font-size:0.85rem; color:var(--text);">→ ${a.talk}</div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderOpp() {
-  const container = document.getElementById('opp-content');
-  container.innerHTML = opportunitiesData.map(o => `
-    <div class="opp-card">
-      <h3 style="color:var(--neon-orange); margin-bottom:0.5rem;">${o.title}</h3>
-      <p>${o.body}</p>
-      <p style="margin-top:0.6rem;"><strong>Why it correlates to you:</strong> ${o.whyYou}</p>
-      <div style="margin-top:0.5rem;">${o.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-    </div>
-  `).join('');
-}
-
-function openModal(index) {
-  const item = feedData[index];
-  const body = document.getElementById('modal-body');
-  body.innerHTML = `
-    <div class="source" style="margin-bottom:0.5rem;">${item.source} • ${item.time}</div>
-    <h2>${item.title}</h2>
-    <div class="source-meta" style="margin-bottom:1rem;">Accounts/sources seen: ${item.accounts}<br>Origin breakdown: ${item.origin}<br>Why chosen: ${item.whySelected}</div>
-    <p style="margin-bottom:1rem; line-height:1.5;">${item.explanation}</p>
-    <h3 style="color:var(--neon-orange); margin:1rem 0 0.5rem;">Why it matters</h3>
-    <p style="margin-bottom:1rem; line-height:1.5;">${item.whyItMatters}</p>
-    <h3 style="color:var(--neon-green); margin:1rem 0 0.5rem;">Likely next</h3>
-    <p style="margin-bottom:1rem; line-height:1.5;">${item.next}</p>
-    <h3 style="color:var(--neon-green); margin:1rem 0 0.5rem;">Sources</h3>
-    <ul class="source-list">
-      ${item.sources.map(s => `<li><a href="${s.url}" target="_blank" rel="noopener">${s.title}</a></li>`).join('')}
-    </ul>
-    <div style="margin-top:1.5rem;">${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-  `;
-  document.getElementById('detail-modal').classList.add('active');
-}
-
-function closeModal() {
-  document.getElementById('detail-modal').classList.remove('active');
-}
-
-document.getElementById('detail-modal').addEventListener('click', (e) => {
-  if (e.target.id === 'detail-modal') closeModal();
+document.querySelectorAll('button.nav').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('button.nav').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.s).classList.add('on');
+  });
 });
-
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
-}
-
-document.getElementById('vibe-check').textContent = "VIBE CHECK: " + vibeCheck;
-renderFeed();
-renderWaves();
-renderOpp();
-renderVolume();
-renderAccounts();
-renderWaves();
-renderOpp();
-
-// Subtle terminal effect
-setInterval(() => {
-  const ticker = document.getElementById('ticker');
-  if (Math.random() > 0.7) {
-    ticker.classList.add('glitch');
-    setTimeout(() => ticker.classList.remove('glitch'), 300);
-  }
-}, 5000);
 </script>
 </body>
 </html>
