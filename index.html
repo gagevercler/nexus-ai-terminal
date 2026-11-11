@@ -346,6 +346,13 @@ header {
   transform: translateX(4px);
 }
 
+.opp-card {
+  border-left: 3px solid var(--neon-orange);
+  background: rgba(255,107,0,0.06);
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+}
+
 .volume-panel {
   background: rgba(0,255,255,0.04);
   border: 1px solid var(--border);
@@ -779,7 +786,7 @@ function renderWaves() {
 
 function renderOpp() {
   const container = document.getElementById('opp-content');
-  container.innerHTML = oppData.map(o => `
+  container.innerHTML = opportunitiesData.map(o => `
     <div class="opp-card">
       <h3 style="color:var(--neon-orange); margin-bottom:0.5rem;">${o.title}</h3>
       <p>${o.body}</p>
